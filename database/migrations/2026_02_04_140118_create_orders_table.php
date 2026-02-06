@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('total_amount', 10, 2);
             $table->timestamps();
 
-            $table->index('status');
+            $table->index(['user_id', 'status']); // for faster filter orders by status
         });
     }
 

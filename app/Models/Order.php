@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Payment;
 use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -41,5 +42,15 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+
+    public function payments(): HasMany
+    {
+        /** sometimes there are multiple attempts to pay same order,
+         * failed attempt then success attempt, refund
+         * so I made it hasMany relation not hasOne
+         */
+        return $this->hasMany(Payment::class);
     }
 }
