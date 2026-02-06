@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class OrderItem extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'order_id',
         'product_name',
@@ -28,7 +31,7 @@ class OrderItem extends Model
     protected function subtotal(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->quantity * $this->unit_price,
+            get: fn() => number_format($this->quantity * $this->unit_price, 2, '.', ''),
         );
     }
 }
