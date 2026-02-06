@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API;
 
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
 use App\Http\Requests\Order\CreateOrderRequest;
 
 class OrderController extends Controller
@@ -22,22 +24,21 @@ class OrderController extends Controller
     {
         $orders = $this->orderService->listOrders($request->input('status'), $request->input('per_page'));
 
-        return response()->json($orders);
+        return OrderResource::collection($orders)->response();
     }
 
     public function store(CreateOrderRequest $request): JsonResponse
     {
         $order = $this->orderService->createOrder(auth()->user(), $request->validated());
 
-        return response()->json($order, 201);
+        return $order->toResource()->response()->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Order $order)
     {
-        //
+        $order->load('items');
+
+        return $order->toResource();
     }
 
     /**
@@ -48,11 +49,10 @@ class OrderController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Order $order)
     {
-        //
+        $order->delete();
+
+        return response()->json(['message' => 'Order deleted successfully']);
     }
 }
