@@ -18,6 +18,8 @@ return new class extends Migration
             $table->tinyInteger('status')->default(OrderStatus::Pending->value);
             $table->decimal('total_amount', 10, 2);
             $table->timestamps();
+
+            $table->index('status');
         });
     }
 

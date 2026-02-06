@@ -46,8 +46,6 @@ class AuthController extends Controller
 
     public function refresh()
     {
-        $token = auth('api')->refresh();
-
-        return response()->json($this->authService->formatTokenResponse($token));
+        return response()->json($this->authService->formatTokenResponse(auth('api')->refresh()));
     }
 }

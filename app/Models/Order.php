@@ -20,6 +20,15 @@ class Order extends Model
         'total_amount' => 'decimal:2',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('user', function ($query) {
+            if (auth()->check()) {
+                $query->where('user_id', auth()->id());
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
