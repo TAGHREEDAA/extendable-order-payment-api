@@ -48,4 +48,36 @@ class OrderService
         return $order->load('items');
     }
 
+    public function updateOrder(Order $order, $data): Order
+    {
+        if (isset($data['status'])) {
+            $order->update(['status' => $data['status']]);
+        }
+
+        if (isset($data['items'])) {
+            $order->items()->delete();
+
+            $total = 0;
+            $items = [];
+            foreach ($data['items'] as $item) {
+                $total += $item['quantity'] * $item['unit_price'];
+
+                $items[] = [
+                    'order_id' => $order->id,
+                    'product_name' => $item['product_name'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            $order->items()->insert($items);
+
+            $order->update(['total_amount' => $total]);
+        }
+
+        return $order->load('items');
+    }
+
 }

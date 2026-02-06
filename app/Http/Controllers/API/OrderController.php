@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\Order\CreateOrderRequest;
+use App\Http\Requests\Order\UpdateOrderRequest;
 
 class OrderController extends Controller
 {
@@ -41,12 +42,11 @@ class OrderController extends Controller
         return $order->toResource();
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateOrderRequest $request, Order $order)
     {
-        //
+        $order = $this->orderService->updateOrder($order, $request->validated());
+
+        return $order->toResource()->response();
     }
 
     public function destroy(Order $order)
