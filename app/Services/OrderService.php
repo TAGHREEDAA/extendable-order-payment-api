@@ -15,7 +15,7 @@ class OrderService
             $query->where('status', $status);
         }
 
-        return $query->latest()->simplePaginate($perPage);
+        return $query->latest()->paginate($perPage);
     }
 
     public function createOrder($user, $data)

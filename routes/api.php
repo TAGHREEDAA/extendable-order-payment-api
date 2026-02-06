@@ -6,7 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\OrderController;
 
 
-Route::prefix('auth')->group(function () {
+Route::prefix('auth')->middleware('throttle:60,1')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
 
@@ -17,6 +17,6 @@ Route::prefix('auth')->group(function () {
 });
 
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'throttle:60,1'])->group(function () {
     Route::apiResource('orders', OrderController::class);
 });
