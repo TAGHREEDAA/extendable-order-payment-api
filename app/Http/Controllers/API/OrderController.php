@@ -18,9 +18,11 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        $orders = $this->orderService->listOrders($request->input('status'), $request->input('per_page'));
+
+        return response()->json($orders);
     }
 
     public function store(CreateOrderRequest $request): JsonResponse

@@ -7,6 +7,17 @@ use App\Enums\OrderStatus;
 
 class OrderService
 {
+    public function listOrders($status = null, $perPage = 15)
+    {
+        $query = Order::with('items');
+
+        if ($status !== null && $status !== '') {
+            $query->where('status', $status);
+        }
+
+        return $query->latest()->simplePaginate($perPage);
+    }
+
     public function createOrder($user, $data)
     {
         $total = 0;
