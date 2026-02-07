@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\OrderController;
+use App\Http\Controllers\API\PaymentController;
 
 
 Route::prefix('auth')->middleware('throttle:60,1')->group(function () {
@@ -19,4 +20,5 @@ Route::prefix('auth')->middleware('throttle:60,1')->group(function () {
 
 Route::middleware(['auth:api', 'throttle:60,1'])->group(function () {
     Route::apiResource('orders', OrderController::class);
+    Route::apiResource('payments', PaymentController::class)->only(['index', 'store']);
 });

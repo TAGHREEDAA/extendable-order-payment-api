@@ -4,18 +4,16 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Enums\OrderStatus;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class OrderService
 {
-    public function listOrders($status = null, $perPage = 15)
+    public function listOrders($status = null, $perPage = 15): LengthAwarePaginator
     {
-        $query = Order::with('items');
-
-        if ($status !== null && $status !== '') {
-            $query->where('status', $status);
-        }
-
-        return $query->latest()->paginate($perPage);
+        return Order::with('items')
+            ->when($status !== null && $status !== '', fn ($query) => $query->where('status', $status))
+            ->latest()
+            ->paginate($perPage);
     }
 
     public function createOrder($user, $data)
@@ -32,6 +30,7 @@ class OrderService
         ]);
 
         $items = [];
+
         foreach ($data['items'] as $item) {
             $items[] = [
                 'order_id' => $order->id,
