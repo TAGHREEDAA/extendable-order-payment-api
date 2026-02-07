@@ -5,6 +5,7 @@ namespace App\Http\Requests\Payment;
 use App\Models\Order;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -19,7 +20,7 @@ class ProcessPaymentRequest extends FormRequest
     {
         return [
             'amount' => 'required|numeric|min:0.01',
-            'order_id' => 'required|uuid|exists:orders,id',
+            'order_id' => ['required', 'uuid', Rule::exists('orders', 'id')->where('user_id', auth()->id())],
             'gateway' => ['required', new Enum(PaymentGateway::class)],
         ];
     }

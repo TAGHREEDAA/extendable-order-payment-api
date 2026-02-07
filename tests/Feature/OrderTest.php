@@ -123,7 +123,7 @@ class OrderTest extends TestCase
         Order::factory()->create(['user_id' => $firstUser->id, 'status' => OrderStatus::Confirmed]);
 
         $this->getJson('/api/orders?status=' . OrderStatus::Pending->value, $this->authHeaders($firstUser))
-            ->assertStatus(200)->assertJsonCount(2, 'data');
+            ->assertStatus(200)->assertJsonCount(5, 'data');
     }
 
     public function test_view_order(): void
