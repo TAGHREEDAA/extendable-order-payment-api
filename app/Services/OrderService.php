@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Models\Order;
 use App\Enums\OrderStatus;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -16,12 +17,9 @@ class OrderService
             ->paginate($perPage);
     }
 
-    public function createOrder($user, $data)
+    public function createOrder(User $user, $data)
     {
-        $total = 0;
-        foreach ($data['items'] as $item) {
-            $total += $item['quantity'] * $item['unit_price'];
-        }
+        $total = collect($data['items'])->sum(fn ($item) => $item['quantity'] * $item['unit_price']);
 
         $order = Order::create([
             'user_id' => $user->id,
@@ -29,18 +27,14 @@ class OrderService
             'total_amount' => $total,
         ]);
 
-        $items = [];
-
-        foreach ($data['items'] as $item) {
-            $items[] = [
-                'order_id' => $order->id,
-                'product_name' => $item['product_name'],
-                'quantity' => $item['quantity'],
-                'unit_price' => $item['unit_price'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
+        $items = collect($data['items'])->map(fn ($item) => [
+            'order_id' => $order->id,
+            'product_name' => $item['product_name'],
+            'quantity' => $item['quantity'],
+            'unit_price' => $item['unit_price'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ])->toArray();
 
         $order->items()->insert($items);
 
@@ -58,6 +52,7 @@ class OrderService
 
             $total = 0;
             $items = [];
+
             foreach ($data['items'] as $item) {
                 $total += $item['quantity'] * $item['unit_price'];
 
