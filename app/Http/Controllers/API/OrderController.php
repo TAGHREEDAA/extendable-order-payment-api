@@ -51,7 +51,9 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
-        $order->delete();
+        if (!$this->orderService->deleteOrder($order)) {
+            return response()->json(['message' => 'Cannot delete the order because it has associated payments'], 422);
+        }
 
         return response()->json(['message' => 'Order deleted successfully']);
     }

@@ -79,4 +79,13 @@ class OrderService
         return $order->load('items');
     }
 
+    public function deleteOrder(Order $order): bool
+    {
+        if ($order->payments()->exists()) {
+            return false;
+        }
+
+        $order->delete();
+        return true;
+    }
 }
