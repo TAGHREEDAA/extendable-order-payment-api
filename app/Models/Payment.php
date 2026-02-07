@@ -30,6 +30,15 @@ class Payment extends Model
         'gateway_response' => 'array',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('order', function ($query) {
+            if (auth()->check()) {
+                $query->whereHas('order', fn ($q) => $q->where('user_id', auth()->id()));
+            }
+        });
+    }
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
