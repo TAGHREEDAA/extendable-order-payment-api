@@ -26,6 +26,16 @@ php artisan serve
 
 The API will be available at `http://localhost:8000/api`
 
+## Running Tests
+
+```bash
+php artisan test
+```
+
+Tests cover authentication, order CRUD, payment processing, validation, authorization, and business rules.
+
+CI/CD is configured via GitHub Actions to run tests on every push.
+
 ## API Endpoints
 
 ### Authentication
@@ -56,9 +66,9 @@ The API will be available at `http://localhost:8000/api`
 
 ## API Documentation
 
-Import the Postman collection from `postman_collection.json` in the repo root. It includes examples for all endpoints with success and error cases.
+Import the [Postman collection](https://github.com/TAGHREEDAA/extendable-order-payment-api/blob/master/postman_collection.json) into Postman. It includes examples for all endpoints with success and error cases.
 
-Set the `base_url` variable to `http://localhost:8000/api` and add the JWT token from login to the `Authorization` header as `Bearer <token>`.
+Set the `base_url` variable to [`http://localhost:8000/api`](http://localhost:8000/api) and add the JWT token from login to the `Authorization` header as `Bearer <token>`.
 
 ## Payment Gateway Extensibility
 
@@ -177,16 +187,6 @@ At first it looks like one order = one payment. But what if the payment fails an
 - Orders **cannot be deleted** if they have associated payments
 - Payment amount must match the order total
 - Users can only access their own orders and payments
-
-## Running Tests
-
-```bash
-php artisan test
-```
-
-Tests cover authentication, order CRUD, payment processing, validation, authorization, and business rules.
-
-CI/CD is configured via GitHub Actions to run tests on every push.
 
 ## Assumptions
 
